@@ -87,29 +87,154 @@ def depthFirstSearch(problem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    frontier = util.Stack()
+    visited = set()
+
+    print("Start:", problem.getStartState())
+    print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
+    print("Start's successors:", problem.getSuccessors(problem.getStartState()))
+
+    start_state = problem.getStartState()
+    frontier.push((start_state, []))
+
+    while not frontier.isEmpty():
+        state, actions = frontier.pop()
+
+        if problem.isGoalState(state):
+            count = 0
+
+            for action in actions:
+                count += 1
+
+            print("Number of actions:", count)
+            return actions
+
+        if state not in visited:
+            visited.add(state)
+            for successor, action, stepCost in problem.getSuccessors(state):
+                if successor not in visited:
+                    frontier.push((successor, actions + [action]))
+
+
+    return []
+
+        
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    frontier = util.Queue()
+    visited = set()
+
+    start_state = problem.getStartState()
+    frontier.push((start_state, []))
+
+
+    while not frontier.isEmpty():
+        state, actions = frontier.pop()
+
+        if problem.isGoalState(state):
+            count = 0
+
+            for action in actions:
+                count += 1
+
+            print("Number of actions:", count)
+            return actions
+
+        if state not in visited:
+            visited.add(state)
+            for successor, action, stepCost in problem.getSuccessors(state):
+                if successor not in visited:
+                    frontier.push((successor, actions + [action]))
+
+    return[]
+
+
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    frontier = util.PriorityQueue()
+    visited = set()
+
+    print("Start:", problem.getStartState())
+    print("Start's successors:", problem.getSuccessors(problem.getStartState()))
+
+
+    start_state = problem.getStartState()
+    frontier.push((start_state, []), 0)
+
+    while not frontier.isEmpty():
+        state, actions = frontier.pop()
+
+        if problem.isGoalState(state):
+            count = 0
+
+            for action in actions:
+                count += 1
+
+            print("Number of actions:", count)
+            return actions
+
+        if state not in visited:
+            visited.add(state)
+            for successor, action, stepCost in problem.getSuccessors(state):
+                if successor not in visited:
+                    frontier.push((successor, actions + [action]), problem.getCostOfActions(actions + [action]))
+
+
+    return []
 
 def nullHeuristic(state, problem=None):
     """
     A heuristic function estimates the cost from the current state to the nearest
     goal in the provided SearchProblem.  This heuristic is trivial.
     """
-    return 0
+    goal_pos = problem.goal
+
+    if state == goal_pos:
+        return 0
+
+    curr_pos = state
+
+    # Manhattan distance
+    heuristic_cost = abs(curr_pos[0] - goal_pos[0]) + abs(curr_pos[1] - goal_pos[1])
+
+    return heuristic_cost
 
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    frontier = util.PriorityQueue()
+    visited = set()
+
+    start_state = problem.getStartState()
+
+    frontier.push((start_state, []), heuristic(start_state, problem))
+
+    while not frontier.isEmpty():
+        state, actions = frontier.pop()
+
+        if problem.isGoalState(state):
+            count = 0
+
+            for action in actions:
+                count += 1
+
+            print("Number of actions:", count)
+            return actions
+
+        if state not in visited:
+            visited.add(state)
+            for successor, action, stepCost in problem.getSuccessors(state):
+                if successor not in visited:
+                    frontier.push((successor, actions + [action]), problem.getCostOfActions(actions + [action]) + heuristic(successor, problem))
+
+    return []
+
+    # while not frontier.isEmpty():
+
 
 
 # Abbreviations
